@@ -174,4 +174,17 @@ import UIKit
       return self
     }
   }
+
+  // Old arch (Bridge/Paper) child routing — redirects children to the glass contentView
+  // so they composite correctly with the glass effect on iOS 26+.
+  @objc(insertReactSubview:atIndex:)
+  public func insertReactSubview(_ subview: UIView, at index: Int) {
+    let target = getContentView() ?? self
+    target.insertSubview(subview, at: index)
+  }
+
+  @objc(removeReactSubview:)
+  public func removeReactSubview(_ subview: UIView) {
+    subview.removeFromSuperview()
+  }
 }

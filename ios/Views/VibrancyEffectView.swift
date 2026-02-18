@@ -94,8 +94,20 @@ import UIKit
     animator.stopAnimation(true)
     animator.finishAnimation(at: .current)
   }
-    
-    // Helper to parse string to UIBlurEffect.Style
+
+  // Old arch (Bridge/Paper) child routing — children must live inside the vibrancy
+  // effect's contentView to receive the vibrancy treatment.
+  @objc(insertReactSubview:atIndex:)
+  public func insertReactSubview(_ subview: UIView, at index: Int) {
+    contentView.insertSubview(subview, at: index)
+  }
+
+  @objc(removeReactSubview:)
+  public func removeReactSubview(_ subview: UIView) {
+    subview.removeFromSuperview()
+  }
+
+  // Helper to parse string to UIBlurEffect.Style
     private func styleFromString(_ style: String) -> UIBlurEffect.Style {
         switch style {
         case "xlight": return .extraLight

@@ -25,9 +25,13 @@ struct BasicColoredView: View {
     self.blurIntensity = mapBlurAmountToIntensity(blurAmount)
   }
 
+  @ViewBuilder
   var body: some View {
-    content
-      .ignoresSafeArea(ignoreSafeArea ? .all : [])
+    if #available(iOS 14.0, *) {
+      content.ignoresSafeArea(ignoreSafeArea ? .all : [])
+    } else {
+      content.edgesIgnoringSafeArea(ignoreSafeArea ? .all : [])
+    }
   }
 
   private var content: some View {

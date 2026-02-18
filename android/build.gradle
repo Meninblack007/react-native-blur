@@ -18,8 +18,6 @@ buildscript {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-apply plugin: "com.facebook.react"
-
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ReactNativeBlur_" + name]).toInteger()
 }
@@ -53,15 +51,8 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  sourceSets {
-    main {
-      java.srcDirs += [
-        "generated/java",
-        "generated/jni"
-      ]
-    }
-  }
 }
+
 
 repositories {
   mavenCentral()
@@ -77,8 +68,3 @@ dependencies {
   implementation 'com.qmdeve.blurview:core:1.1.4'
 }
 
-react {
-  jsRootDir = file("../src/")
-  libraryName = "ReactNativeBlurView"
-  codegenJavaPackageName = "com.sbaiahmed1.reactnativeblur"
-}

@@ -3,23 +3,10 @@ package com.sbaiahmed1.reactnativeblur
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.viewmanagers.ReactNativeBlurViewManagerInterface
-import com.facebook.react.viewmanagers.ReactNativeBlurViewManagerDelegate
 
 @ReactModule(name = ReactNativeBlurViewManager.NAME)
-class ReactNativeBlurViewManager : ViewGroupManager<ReactNativeBlurView>(),
-  ReactNativeBlurViewManagerInterface<ReactNativeBlurView> {
-  private val mDelegate: ViewManagerDelegate<ReactNativeBlurView>
-
-  init {
-    mDelegate = ReactNativeBlurViewManagerDelegate(this)
-  }
-
-  override fun getDelegate(): ViewManagerDelegate<ReactNativeBlurView>? {
-    return mDelegate
-  }
+class ReactNativeBlurViewManager : ViewGroupManager<ReactNativeBlurView>() {
 
   override fun getName(): String {
     return NAME
@@ -30,12 +17,12 @@ class ReactNativeBlurViewManager : ViewGroupManager<ReactNativeBlurView>(),
   }
 
   @ReactProp(name = "blurType")
-  override fun setBlurType(view: ReactNativeBlurView?, blurType: String?) {
+  fun setBlurType(view: ReactNativeBlurView?, blurType: String?) {
     view?.setBlurType(blurType ?: "xlight")
   }
 
   @ReactProp(name = "blurAmount")
-  override fun setBlurAmount(view: ReactNativeBlurView?, blurAmount: Double) {
+  fun setBlurAmount(view: ReactNativeBlurView?, blurAmount: Double) {
     view?.setBlurAmount(blurAmount.toFloat())
   }
 
@@ -45,29 +32,20 @@ class ReactNativeBlurViewManager : ViewGroupManager<ReactNativeBlurView>(),
   }
 
   @ReactProp(name = "reducedTransparencyFallbackColor")
-  override fun setReducedTransparencyFallbackColor(view: ReactNativeBlurView?, reducedTransparencyFallbackColor: String?) {
-    // no-op
+  fun setReducedTransparencyFallbackColor(view: ReactNativeBlurView?, reducedTransparencyFallbackColor: String?) {
+    // no-op on Android
   }
 
   @ReactProp(name = "ignoreSafeArea")
-  override fun setIgnoreSafeArea(view: ReactNativeBlurView?, ignoreSafeArea: Boolean) {
-    // no-op
+  fun setIgnoreSafeArea(view: ReactNativeBlurView?, ignoreSafeArea: Boolean) {
+    // no-op on Android
   }
 
-  /**
-   * Called when view is detached from view hierarchy and allows for cleanup.
-   * This prevents the white screen issue during navigation transitions on Android.
-   */
   override fun onDropViewInstance(view: ReactNativeBlurView) {
     super.onDropViewInstance(view)
-    // Call cleanup to reset state and prevent white screen artifacts
     view.cleanup()
   }
 
-  /**
-   * Indicates that React Native's Yoga layout should handle child positioning.
-   * Returns false to let React Native manage the layout of children.
-   */
   override fun needsCustomLayoutForChildren(): Boolean {
     return false
   }
