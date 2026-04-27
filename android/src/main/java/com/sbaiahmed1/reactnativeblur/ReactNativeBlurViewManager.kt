@@ -31,6 +31,11 @@ class ReactNativeBlurViewManager : ViewGroupManager<ReactNativeBlurView>() {
     view?.setBorderRadius(borderRadius)
   }
 
+  @ReactProp(name = "nativeOverlayColor", customType = "Color")
+  fun setNativeOverlayColor(view: ReactNativeBlurView?, nativeOverlayColor: Int) {
+    view?.setNativeOverlayColor(nativeOverlayColor)
+  }
+
   @ReactProp(name = "reducedTransparencyFallbackColor")
   fun setReducedTransparencyFallbackColor(view: ReactNativeBlurView?, reducedTransparencyFallbackColor: String?) {
     // no-op on Android

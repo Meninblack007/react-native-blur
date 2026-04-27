@@ -30,6 +30,7 @@ import android.view.View.MeasureSpec
 class ReactNativeBlurView : BlurViewGroup {
   private var currentBlurRadius = DEFAULT_BLUR_RADIUS
   private var currentOverlayColor = Color.TRANSPARENT
+  private var hasNativeOverlayColor = false
   private var currentCornerRadius = 0f
   private var glassTintColor: Int = Color.TRANSPARENT
   private var glassOpacity: Float = 1.0f
@@ -253,6 +254,7 @@ class ReactNativeBlurView : BlurViewGroup {
    */
   fun cleanup() {
     isBlurInitialized = false
+    hasNativeOverlayColor = false
     initRunnable?.let { removeCallbacks(it) }
     initRunnable = null
     logDebug("View cleaned up")
@@ -273,13 +275,26 @@ class ReactNativeBlurView : BlurViewGroup {
     }
   }
 
+  fun setNativeOverlayColor(color: Int) {
+    hasNativeOverlayColor = true
+    currentOverlayColor = color
+    try {
+      super.setBackgroundColor(currentOverlayColor)
+      super.setOverlayColor(currentOverlayColor)
+    } catch (e: Exception) {
+      logError("Failed to set native overlay color: ${e.message}", e)
+    }
+  }
+
   /**
    * Set the blur type which determines the overlay color.
    * @param type The blur type string (case-insensitive)
    */
   fun setBlurType(type: String) {
     val blurType = BlurType.fromString(type)
-    currentOverlayColor = blurType.overlayColor
+    if (!hasNativeOverlayColor) {
+      currentOverlayColor = blurType.overlayColor
+    }
     logDebug("setBlurType: $type -> ${blurType.name}")
 
     try {

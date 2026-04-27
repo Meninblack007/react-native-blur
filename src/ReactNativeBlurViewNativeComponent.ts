@@ -1,5 +1,5 @@
 import { requireNativeComponent } from 'react-native';
-import type { ViewProps } from 'react-native';
+import type { ViewProps, ColorValue } from 'react-native';
 
 export type BlurType =
   | 'xlight'
@@ -29,6 +29,7 @@ interface NativeProps extends ViewProps {
   blurType?: BlurType;
   reducedTransparencyFallbackColor?: string;
   ignoreSafeArea?: boolean;
+  nativeOverlayColor?: ColorValue;
 }
 
 export default requireNativeComponent<NativeProps>('ReactNativeBlurView');

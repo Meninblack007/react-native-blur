@@ -37,6 +37,15 @@ export interface BlurViewProps {
   overlayColor?: ColorValue;
 
   /**
+   * @description Android-only. Passes the overlay color directly to the native blur layer
+   * instead of rendering a JS View on top. Use this for precise tint control on Android.
+   *
+   * @default undefined
+   * @platform android
+   */
+  nativeOverlayColor?: ColorValue;
+
+  /**
    * @description style object for the blur view
    *
    * @default undefined
@@ -85,24 +94,29 @@ export const BlurView: React.FC<BlurViewProps> = ({
   blurAmount = 10,
   reducedTransparencyFallbackColor = '#FFFFFF',
   overlayColor,
+  nativeOverlayColor,
   style,
   children,
   ignoreSafeArea = false,
   ...props
 }) => {
   const overlay = { backgroundColor: overlayColor };
+  const isAndroid = Platform.OS === 'android';
+  const useNativeOverlay = isAndroid && nativeOverlayColor != null;
+
   const commonProps: BlurViewProps = {
     blurType,
     blurAmount,
     ignoreSafeArea,
     reducedTransparencyFallbackColor,
+    ...(useNativeOverlay ? { nativeOverlayColor } : {}),
   };
 
   // If no children, render the blur view directly (for background use)
   if (!Children.count(children)) {
     return (
       <ReactNativeBlurView
-        style={[style, overlay]}
+        style={useNativeOverlay ? style : [style, overlay]}
         {...commonProps}
         {...props}
       />
@@ -110,11 +124,10 @@ export const BlurView: React.FC<BlurViewProps> = ({
   }
 
   // If children exist, use the style default for Android
-  if (Platform.OS === 'android') {
+  if (isAndroid) {
     return (
       <ReactNativeBlurView style={style} {...commonProps} {...props}>
-        <View style={[StyleSheet.absoluteFill, overlay]} />
-
+        {!useNativeOverlay && <View style={[StyleSheet.absoluteFill, overlay]} />}
         {children}
       </ReactNativeBlurView>
     );
